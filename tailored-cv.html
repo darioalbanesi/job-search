@@ -303,7 +303,8 @@
                 <h3>Ready-Made AI Review Prompt</h3>
                 <div class="info-box">
                     <p><strong>Copy and paste this prompt with your CV:</strong></p>
-                    <div style="background-color: #f8f9fa; border: 1px solid #e9ecef; padding: 1.5rem; margin: 1rem 0; font-family: monospace; font-size: 0.9rem; line-height: 1.4;">
+                    <div id="ai-prompt" style="background-color: #f8f9fa; border: 1px solid #e9ecef; padding: 1.5rem; margin: 1rem 0; font-family: monospace; font-size: 0.9rem; line-height: 1.4; position: relative;">
+                        <button onclick="copyPrompt()" style="position: absolute; top: 10px; right: 10px; background-color: #3498db; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">Copy Prompt</button>
                         <p>I'm a UX professional seeking opportunities in Switzerland. Please review my CV and provide specific recommendations for optimization based on the following criteria:</p>
                         
                         <p><strong>SWISS MARKET REQUIREMENTS:</strong><br>
@@ -337,6 +338,56 @@
                         Target company size: [INSERT - e.g., "Scale-up to enterprise"]<br>
                         Years of experience: [INSERT YOUR EXPERIENCE LEVEL]</p>
                     </div>
+                    <script>
+                    function copyPrompt() {
+                        const promptText = `I'm a UX professional seeking opportunities in Switzerland. Please review my CV and provide specific recommendations for optimization based on the following criteria:
+
+SWISS MARKET REQUIREMENTS:
+- Cultural expectations (precision, structured presentation, professional tone)
+- Language considerations (multilingual capabilities, German/French/Italian/English)
+- Industry-specific terminology for Swiss companies
+- Regional preferences (German-speaking, French-speaking regions)
+
+ATS OPTIMIZATION:
+- Keyword density and relevance for UX roles
+- Formatting compatibility with applicant tracking systems
+- Section headers and structure clarity
+- Skill categorization and presentation
+
+UX MARKET SPECIFICS:
+- Modern AI integration skills and tools (essential by 2025)
+- Current tool proficiency (Figma, research tools, collaboration platforms)
+- Business impact quantification and metrics
+- Role positioning (Designer vs Product Designer vs UX Researcher)
+
+PLEASE PROVIDE:
+1. Overall assessment of CV strength for Swiss market
+2. Specific sections that need improvement
+3. Missing keywords or skills for target roles
+4. Formatting issues that could affect ATS parsing
+5. Suggestions for better quantification of achievements
+6. Cultural adaptation recommendations
+7. Priority improvements ranked by impact
+
+Target role type: [INSERT SPECIFIC ROLE - e.g., "Senior UX Designer in fintech"]
+Target company size: [INSERT - e.g., "Scale-up to enterprise"]
+Years of experience: [INSERT YOUR EXPERIENCE LEVEL]`;
+                        
+                        navigator.clipboard.writeText(promptText).then(function() {
+                            const button = event.target;
+                            const originalText = button.textContent;
+                            button.textContent = 'Copied!';
+                            button.style.backgroundColor = '#27ae60';
+                            setTimeout(function() {
+                                button.textContent = originalText;
+                                button.style.backgroundColor = '#3498db';
+                            }, 2000);
+                        }).catch(function(err) {
+                            console.error('Could not copy text: ', err);
+                            alert('Copy failed. Please select and copy the text manually.');
+                        });
+                    }
+                    </script>
                 </div>
 
                 <h3>How to Use This Prompt Effectively</h3>
