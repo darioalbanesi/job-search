@@ -373,19 +373,70 @@ Target role type: [INSERT SPECIFIC ROLE - e.g., "Senior UX Designer in fintech"]
 Target company size: [INSERT - e.g., "Scale-up to enterprise"]
 Years of experience: [INSERT YOUR EXPERIENCE LEVEL]`;
                         
-                        navigator.clipboard.writeText(promptText).then(function() {
-                            const button = event.target;
-                            const originalText = button.textContent;
-                            button.textContent = 'Copied!';
-                            button.style.backgroundColor = '#27ae60';
-                            setTimeout(function() {
-                                button.textContent = originalText;
-                                button.style.backgroundColor = '#3498db';
-                            }, 2000);
-                        }).catch(function(err) {
-                            console.error('Could not copy text: ', err);
-                            alert('Copy failed. Please select and copy the text manually.');
-                        });
+                        const button = event.target;
+                        
+                        // Try modern clipboard API first
+                        if (navigator.clipboard && window.isSecureContext) {
+                            navigator.clipboard.writeText(promptText).then(function() {
+                                button.textContent = 'Copied!';
+                                button.style.backgroundColor = '#27ae60';
+                                setTimeout(function() {
+                                    button.textContent = 'Copy Prompt';
+                                    button.style.backgroundColor = '#3498db';
+                                }, 2000);
+                            }).catch(function(err) {
+                                console.error('Clipboard API failed: ', err);
+                                fallbackCopy();
+                            });
+                        } else {
+                            // Fallback for older browsers or non-secure contexts
+                            fallbackCopy();
+                        }
+                        
+                        function fallbackCopy() {
+                            // Create temporary textarea
+                            const textArea = document.createElement('textarea');
+                            textArea.value = promptText;
+                            textArea.style.position = 'fixed';
+                            textArea.style.left = '-999999px';
+                            textArea.style.top = '-999999px';
+                            document.body.appendChild(textArea);
+                            textArea.focus();
+                            textArea.select();
+                            
+                            try {
+                                const successful = document.execCommand('copy');
+                                if (successful) {
+                                    button.textContent = 'Copied!';
+                                    button.style.backgroundColor = '#27ae60';
+                                    setTimeout(function() {
+                                        button.textContent = 'Copy Prompt';
+                                        button.style.backgroundColor = '#3498db';
+                                    }, 2000);
+                                } else {
+                                    throw new Error('execCommand failed');
+                                }
+                            } catch (err) {
+                                console.error('Fallback copy failed: ', err);
+                                // Select the prompt text for manual copying
+                                const promptDiv = document.getElementById('ai-prompt');
+                                const range = document.createRange();
+                                range.selectNodeContents(promptDiv);
+                                const selection = window.getSelection();
+                                selection.removeAllRanges();
+                                selection.addRange(range);
+                                
+                                button.textContent = 'Text Selected - Press Ctrl+C';
+                                button.style.backgroundColor = '#f39c12';
+                                setTimeout(function() {
+                                    button.textContent = 'Copy Prompt';
+                                    button.style.backgroundColor = '#3498db';
+                                    selection.removeAllRanges();
+                                }, 4000);
+                            } finally {
+                                document.body.removeChild(textArea);
+                            }
+                        }
                     }
                     </script>
                 </div>
